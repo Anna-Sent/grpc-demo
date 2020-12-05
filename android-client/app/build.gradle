@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.protobuf'
 
 android {
@@ -59,4 +60,8 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf-lite:1.31.1' // CURRENT_GRPC_VERSION
     implementation 'io.grpc:grpc-stub:1.31.1' // CURRENT_GRPC_VERSION
     implementation 'org.apache.tomcat:annotations-api:6.0.53'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
