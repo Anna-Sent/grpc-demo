@@ -5,4 +5,4 @@ package io.grpc.demo
 const val STREAM_REQUEST_TIMEOUT_SECONDS = 0L
 const val SINGLE_REQUEST_TIMEOUT_SECONDS = 30L
 
-const val URL = "192.168.0.27:50051"
+const val URL = "192.168.1.27:50051"
