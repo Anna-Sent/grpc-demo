@@ -28,7 +28,9 @@ class Grpc constructor(
             .apply { if (usingSsl) useTransportSecurity() else usePlaintext() }
             .userAgent(userAgent)
             .intercept(interceptors)
+            // Если не получаем пакетов от сервера, отправляем keepalive-ping чеерез 10 сек.
             .keepAliveTime(10, SECONDS)
+            // Ждем ответа keepalive-ping от сервера 10 сек.
             .keepAliveTimeout(10, SECONDS)
             .keepAliveWithoutCalls(true)
             .build()

@@ -46,6 +46,7 @@ class MainActivity : Activity() {
                     binding.layoutFibonacci.perform.isEnabled = false
                 }
             }
+            // Нужен таймаут между попытками
             .retry { count, throwable ->
                 if (disposables.isDisposed) {
                     logger.debug("calculate onError: already disposed")
