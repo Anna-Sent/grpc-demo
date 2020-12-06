@@ -24,5 +24,6 @@ allprojects {
         // See https://github.com/grpc/grpc-java/issues/5782
         mavenCentral()
         mavenLocal()
+        maven { url 'https://jitpack.io' }
     }
 }

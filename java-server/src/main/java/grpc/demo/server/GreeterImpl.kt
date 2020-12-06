@@ -46,7 +46,7 @@ class GreeterImpl(private val logger: Logger) : GreeterImplBase() {
         responseObserver.onCompleted()
     }
 
-    override fun sum(responseObserver: StreamObserver<CalculationResult>) =
+    override fun sumTotal(responseObserver: StreamObserver<CalculationResult>) =
             object : StreamObserver<Number> {
 
                 var sum = 0f
@@ -65,7 +65,7 @@ class GreeterImpl(private val logger: Logger) : GreeterImplBase() {
                 }
             }
 
-    override fun sumRunning(responseObserver: StreamObserver<CalculationResult>) =
+    override fun sumCurrent(responseObserver: StreamObserver<CalculationResult>) =
             object : StreamObserver<Number> {
 
                 var sum = 0f

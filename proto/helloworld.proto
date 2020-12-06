@@ -4,10 +4,10 @@ option java_multiple_files = true;
 option java_package = "grpc.demo";
 
 service Greeter {
-  rpc Calculate (BinaryOperation) returns (CalculationResult);
+  rpc Calculate(BinaryOperation) returns (CalculationResult);
   rpc Fibonacci(Number) returns (stream CalculationResult);
-  rpc Sum(stream Number) returns (CalculationResult);
-  rpc SumRunning(stream Number) returns (stream CalculationResult);
+  rpc SumTotal(stream Number) returns (CalculationResult);
+  rpc SumCurrent(stream Number) returns (stream CalculationResult);
 }
 
 enum Operation {

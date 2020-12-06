@@ -1,15 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.protobuf'
+apply plugin: 'com.google.osdetector'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 30
 
     defaultConfig {
-        applicationId "io.grpc.helloworldexample"
-        // API level 14+ is required for TLS since Google Play Services v10.2
-        minSdkVersion 14
-        targetSdkVersion 27
+        applicationId "io.grpc.demo"
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
@@ -25,6 +27,14 @@ android {
         textReport true
         textOutput "stdout"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
     sourceSets {
         main {
             proto {
@@ -32,12 +42,26 @@ android {
             }
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
+    androidExtensions {
+        experimental = true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
 }
 
 protobuf {
     protoc { artifact = 'com.google.protobuf:protoc:3.12.0' }
     plugins {
-        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.31.1' // CURRENT_GRPC_VERSION
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.31.1' // CURRENT_GRPC_VERSION
         }
     }
     generateProtoTasks {
@@ -53,7 +77,27 @@ protobuf {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.0.2'
+    // Tests: Junit, Conscrypt (for gRPC SSL)
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.conscrypt:conscrypt-openjdk:2.2.1:' + osdetector.classifier
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha02'
+    implementation 'androidx.browser:browser:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0-alpha04'
 
     // You need to build grpc-java to obtain these libraries below.
     implementation 'io.grpc:grpc-okhttp:1.31.1' // CURRENT_GRPC_VERSION
@@ -61,6 +105,13 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.31.1' // CURRENT_GRPC_VERSION
     implementation 'org.apache.tomcat:annotations-api:6.0.53'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.github.ReactiveX:RxKotlin:2.4.0'
+
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'com.github.tony19:logback-android:2.0.0'
 }
 repositories {
     mavenCentral()
