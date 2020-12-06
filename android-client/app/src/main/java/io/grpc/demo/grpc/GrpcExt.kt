@@ -7,6 +7,7 @@ import io.grpc.Context
 import io.grpc.Deadline
 import io.grpc.stub.AbstractStub
 import java.util.concurrent.TimeUnit.SECONDS
+import kotlin.concurrent.thread
 
 @Suppress("TooGenericExceptionCaught", "LongParameterList")
 fun <Request, Response, S : AbstractStub<S>> Grpc.call(
@@ -53,7 +54,7 @@ private fun deadline(timeoutInSeconds: Long) =
 
 private fun Grpc.startClosingThread() {
     if (options.shutdownTimeoutMs > 0) {
-        Thread {
+        thread {
             try {
                 Thread.sleep(options.shutdownTimeoutMs)
             } catch (e: InterruptedException) {
@@ -62,7 +63,7 @@ private fun Grpc.startClosingThread() {
             } finally {
                 close()
             }
-        }.start()
+        }
     }
 }
 

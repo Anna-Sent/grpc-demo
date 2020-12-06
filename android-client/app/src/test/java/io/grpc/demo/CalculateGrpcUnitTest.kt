@@ -79,7 +79,7 @@ class CalculateGrpcUnitTest {
             null,
             CalculatorServiceGrpc::newBlockingStub,
             Number.newBuilder()
-                .setValue(5f)
+                .setValue(10f)
                 .build(),
             CalculatorServiceBlockingStub::fibonacci,
             SINGLE_REQUEST_TIMEOUT_SECONDS,
