@@ -11,9 +11,7 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
-open class GrpcSource(protected val grpc: Grpc) : UrlProvider {
-
-    final override val url = grpc.endpoint.target
+open class GrpcSource(protected val grpc: Grpc) {
 
     protected fun <Request, Response, S : AbstractStub<S>> toSingle(
         getBlockingStub: (Channel) -> S,
@@ -71,7 +69,7 @@ open class GrpcSource(protected val grpc: Grpc) : UrlProvider {
 
         private fun <T> onSuccess(emitter: SingleEmitter<T>, data: T) {
             if (!emitter.isDisposed) {
-                emitter.onSuccess(data)
+                emitter.onSuccess(data!!)
             }
         }
 
@@ -83,7 +81,7 @@ open class GrpcSource(protected val grpc: Grpc) : UrlProvider {
 
         private fun <T> onNext(emitter: ObservableEmitter<T>, data: T) {
             if (!emitter.isDisposed) {
-                emitter.onNext(data)
+                emitter.onNext(data!!)
             } else {
                 throw GrpcCancelledException()
             }

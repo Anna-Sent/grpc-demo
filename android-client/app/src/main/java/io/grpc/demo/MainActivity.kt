@@ -10,11 +10,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
-import org.slf4j.LoggerFactory
 
 class MainActivity : Activity() {
-
-    private val logger = LoggerFactory.getLogger(javaClass)
 
     private lateinit var binding: ActivityMainBinding
     private val disposables = CompositeDisposable()
@@ -39,40 +36,24 @@ class MainActivity : Activity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                if (disposables.isDisposed) {
-                    logger.debug("calculate onSubscribed: already disposed")
-                } else {
-                    binding.layoutFibonacci.progressBar.isVisible = true
-                    binding.layoutFibonacci.perform.isEnabled = false
-                }
+                binding.layoutFibonacci.progressBar.isVisible = true
+                binding.layoutFibonacci.perform.isEnabled = false
             }
             // Нужен таймаут между попытками
             .retry { count, throwable ->
-                if (disposables.isDisposed) {
-                    logger.debug("calculate onError: already disposed")
-                } else {
-                    binding.layoutFibonacci.result.text = "$count: $throwable"
-                }
+                binding.layoutFibonacci.result.text = "$count: $throwable"
                 true
             }
             .subscribe(
                 {
-                    if (disposables.isDisposed) {
-                        logger.debug("calculate onNext: already disposed")
-                    } else {
-                        binding.layoutFibonacci.progressBar.isVisible = false
-                        binding.layoutFibonacci.result.text = it.result.toString()
-                        // save last number
-                    }
+                    binding.layoutFibonacci.progressBar.isVisible = false
+                    binding.layoutFibonacci.result.text = it.result.toString()
+                    // save last number
                 },
                 {
-                    if (disposables.isDisposed) {
-                        logger.debug("calculate onError: already disposed")
-                    } else {
-                        binding.layoutFibonacci.progressBar.isVisible = false
-                        binding.layoutFibonacci.result.text = it.toString()
-                        // print error
-                    }
+                    binding.layoutFibonacci.progressBar.isVisible = false
+                    binding.layoutFibonacci.result.text = it.toString()
+                    // print error
                 }
             )
     }

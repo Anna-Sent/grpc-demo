@@ -2,8 +2,8 @@ package io.grpc.demo
 
 import grpc.demo.BinaryOperation
 import grpc.demo.CalculationResult
-import grpc.demo.GreeterGrpc
-import grpc.demo.GreeterGrpc.GreeterBlockingStub
+import grpc.demo.CalculatorServiceGrpc
+import grpc.demo.CalculatorServiceGrpc.CalculatorServiceBlockingStub
 import grpc.demo.Number
 import io.grpc.demo.grpc.Endpoint
 import io.grpc.demo.grpc.Grpc
@@ -27,19 +27,17 @@ class GreeterDataSource : GrpcSource(
 
     fun calculate(operation: BinaryOperation): Single<CalculationResult> {
         return toSingle(
-            null,
-            GreeterGrpc::newBlockingStub,
+            CalculatorServiceGrpc::newBlockingStub,
             operation,
-            GreeterBlockingStub::calculate
+            CalculatorServiceBlockingStub::calculate
         )
     }
 
     fun fibonacci(number: Number): Observable<CalculationResult> {
         return toObservable(
-            null,
-            GreeterGrpc::newBlockingStub,
+            CalculatorServiceGrpc::newBlockingStub,
             number,
-            GreeterBlockingStub::fibonacci
+            CalculatorServiceBlockingStub::fibonacci
         )
     }
 }

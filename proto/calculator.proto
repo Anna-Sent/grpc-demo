@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.demo";
+
+service CalculatorService {
+    rpc Calculate (BinaryOperation) returns (CalculationResult);
+    rpc Fibonacci (Number) returns (stream CalculationResult);
+    rpc SumTotal (stream Number) returns (CalculationResult);
+    rpc SumCurrent (stream Number) returns (stream CalculationResult);
+}
+
+enum Operation {
+    ADD = 0;
+    SUBTRACT = 1;
+}
+
+message BinaryOperation {
+    float first_operand = 1;
+    float second_operand = 2;
+    Operation operation = 3;
+}
+
+message CalculationResult {
+    float result = 1;
+}
+
+message Number {
+    float value = 1;
+}

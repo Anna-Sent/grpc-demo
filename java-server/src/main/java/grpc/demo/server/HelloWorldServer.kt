@@ -27,9 +27,9 @@ class HelloWorldServer {
 
     fun start() {
         server = ServerBuilder.forPort(PORT)
-                .addService(GreeterImpl(logger))
-                .build()
-                .start()
+            .addService(CalculatorServiceImpl(logger))
+            .build()
+            .start()
         logger.info("Server started, listening on $PORT")
         Runtime.getRuntime().addShutdownHook(shutdownHook)
     }
