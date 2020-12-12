@@ -1,5 +1,6 @@
 package io.grpc.demo
 
+import android.R.layout
 import android.app.Activity
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -9,6 +10,7 @@ import grpc.demo.BinaryOperation
 import grpc.demo.Number
 import grpc.demo.Operation.ADD
 import grpc.demo.Operation.SUBTRACT
+import io.grpc.demo.R.array
 import io.grpc.demo.databinding.ActivityMainBinding
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,32 +20,34 @@ import io.reactivex.schedulers.Schedulers
 class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: FibonacciAdapter
-    private var calculateDisposable: Disposable? = null
-    private var fibonacciDisposable: Disposable? = null
+
     private val calculatorDataSource = CalculatorDataSource()
+
+    private var calculateDisposable: Disposable? = null
+
+    private var fibonacciDisposable: Disposable? = null
+    private lateinit var adapter: FibonacciAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.bind(findViewById(R.id.content))
-        binding.layoutFibonacci.progressBar.isVisible = false
-        binding.layoutFibonacci.numberPicker.setupLimits()
-        binding.layoutFibonacci.request.setOnClickListener {
-            subscribeToFibonacci(binding.layoutFibonacci.numberPicker.value)
-        }
-        adapter = FibonacciAdapter()
-        binding.layoutFibonacci.numbers.adapter = adapter
 
+        setupFibonacci()
+
+        setupCalculate()
+    }
+
+    private fun setupCalculate() {
         binding.layoutCalculate.progressBar.isVisible = false
         binding.layoutCalculate.param1.setupLimits()
         binding.layoutCalculate.param2.setupLimits()
         ArrayAdapter.createFromResource(
             this,
-            R.array.binary_operation,
-            android.R.layout.simple_spinner_item
+            array.binary_operation,
+            layout.simple_spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item)
             binding.layoutCalculate.spinner.adapter = adapter
         }
         binding.layoutCalculate.request.setOnClickListener {
@@ -54,6 +58,16 @@ class MainActivity : Activity() {
                 selectedItem
             )
         }
+    }
+
+    private fun setupFibonacci() {
+        binding.layoutFibonacci.progressBar.isVisible = false
+        binding.layoutFibonacci.numberPicker.setupLimits()
+        binding.layoutFibonacci.request.setOnClickListener {
+            subscribeToFibonacci(binding.layoutFibonacci.numberPicker.value)
+        }
+        adapter = FibonacciAdapter()
+        binding.layoutFibonacci.numbers.adapter = adapter
     }
 
     @Suppress("MagicNumber")
@@ -159,7 +173,7 @@ class MainActivity : Activity() {
             .subscribe(
                 {
                     binding.layoutCalculate.progressBar.isVisible = false
-                    binding.layoutCalculate.info.text =
+                    binding.layoutCalculate.card.content.text =
                         "$number1 $operation $number2 = ${it.result.value}"
                 },
                 {
