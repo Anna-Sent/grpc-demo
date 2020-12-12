@@ -5,7 +5,7 @@ import grpc.demo.CalculationResult
 import grpc.demo.CalculatorServiceGrpc
 import grpc.demo.CalculatorServiceGrpc.CalculatorServiceBlockingStub
 import grpc.demo.Number
-import io.grpc.demo.grpc.Endpoint
+import io.grpc.demo.grpc.GrpcEndpoint
 import io.grpc.demo.grpc.Grpc
 import io.grpc.demo.grpc.GrpcOptions
 import io.grpc.demo.grpc.GrpcSource
@@ -20,7 +20,7 @@ class CalculatorDataSource : GrpcSource(
     Grpc(
         logger,
         GrpcOptions(true, 0),
-        Endpoint(URL, false),
+        GrpcEndpoint(URL, false),
         listOf(GrpcLogInterceptor(URL, logger))
     )
 ) {

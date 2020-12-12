@@ -6,8 +6,8 @@ import grpc.demo.CalculatorServiceGrpc.CalculatorServiceBlockingStub
 import grpc.demo.Number
 import grpc.demo.Operation.ADD
 import io.grpc.StatusRuntimeException
-import io.grpc.demo.grpc.Endpoint
 import io.grpc.demo.grpc.Grpc
+import io.grpc.demo.grpc.GrpcEndpoint
 import io.grpc.demo.grpc.GrpcOptions
 import io.grpc.demo.grpc.call
 import io.grpc.demo.grpc.interceptors.GrpcLogInterceptor
@@ -22,12 +22,14 @@ class CalculateGrpcUnitTest {
 
         private val logger = UnitTestLogger()
 
-        private val grpc = Grpc(
-            logger,
-            GrpcOptions(false, 30000),
-            Endpoint(URL, false),
-            listOf(GrpcLogInterceptor(URL, logger))
-        )
+        private val grpc = {
+            Grpc(
+                logger,
+                GrpcOptions(false, 10000),
+                GrpcEndpoint(URL, false),
+                listOf(GrpcLogInterceptor(URL, logger))
+            )
+        }
 
         private val streamingErrorHandler = { throwable: Throwable ->
             if (!contains(throwable, "Channel shutdownNow invoked")) {
@@ -54,19 +56,27 @@ class CalculateGrpcUnitTest {
 
     @Test
     fun calculate() {
-        grpc.call(
+        grpc().call(
             null,
             CalculatorServiceGrpc::newBlockingStub,
             BinaryOperation.newBuilder()
-                .setFirstOperand(11f)
-                .setSecondOperand(22f)
+                .setFirstOperand(
+                    Number.newBuilder()
+                        .setValue(10)
+                        .build()
+                )
+                .setSecondOperand(
+                    Number.newBuilder()
+                        .setValue(10)
+                        .build()
+                )
                 .setOperation(ADD)
                 .build(),
             CalculatorServiceBlockingStub::calculate,
             SINGLE_REQUEST_TIMEOUT_SECONDS,
             { result ->
                 result.fold(
-                    { logger.debug("onSuccess ${it.result}") },
+                    { logger.debug("onSuccess ${it.result.value}") },
                     { logger.debug("onFailure $it") }
                 )
             }
@@ -75,11 +85,11 @@ class CalculateGrpcUnitTest {
 
     @Test
     fun fibonacci() {
-        grpc.call(
+        grpc().call(
             null,
             CalculatorServiceGrpc::newBlockingStub,
             Number.newBuilder()
-                .setValue(10f)
+                .setValue(10)
                 .build(),
             CalculatorServiceBlockingStub::fibonacci,
             SINGLE_REQUEST_TIMEOUT_SECONDS,
@@ -90,7 +100,7 @@ class CalculateGrpcUnitTest {
                         while (stream.hasNext()) {
                             println("\ti: $i")
                             val response = stream.next()
-                            println("\t${response.result}")
+                            println("\t${response.result.value}")
                             ++i
                         }
                     },

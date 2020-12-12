@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit.SECONDS
 class Grpc constructor(
     val logger: Logger,
     val options: GrpcOptions,
-    endpoint: Endpoint,
+    endpoint: GrpcEndpoint,
     private val interceptors: List<ClientInterceptor>
 ) {
 
@@ -23,7 +23,7 @@ class Grpc constructor(
     }
 
     private fun createChannel(
-        endpoint: Endpoint,
+        endpoint: GrpcEndpoint,
         userAgent: String?
     ) = with(endpoint) {
         ManagedChannelBuilder.forTarget(target)
@@ -37,7 +37,12 @@ class Grpc constructor(
     }
 }
 
-data class Endpoint(
+data class GrpcOptions(
+    val checkInUiThread: Boolean,
+    val shutdownTimeoutMs: Long
+)
+
+data class GrpcEndpoint(
     val target: String,
     val usingSsl: Boolean
 )

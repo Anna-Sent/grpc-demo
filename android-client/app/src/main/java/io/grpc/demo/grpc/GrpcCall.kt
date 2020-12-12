@@ -1,5 +1,7 @@
 package io.grpc.demo.grpc
 
+import android.os.Build
+import android.os.Looper
 import android.os.NetworkOnMainThreadException
 import io.grpc.CallCredentials
 import io.grpc.Channel
@@ -68,10 +70,19 @@ private fun Grpc.startClosingThread() {
 }
 
 @Suppress("TooGenericExceptionCaught")
-fun Grpc.close() {
+private fun Grpc.close() {
     try {
         channel.shutdownNow()
     } catch (throwable: Throwable) {
         logger.debug("close: failed ", throwable)
     }
 }
+
+private fun isOnUiThread() =
+    if (isAtLeastMarshmallow()) {
+        Looper.getMainLooper().isCurrentThread
+    } else {
+        Thread.currentThread() === Looper.getMainLooper().thread
+    }
+
+private fun isAtLeastMarshmallow() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M

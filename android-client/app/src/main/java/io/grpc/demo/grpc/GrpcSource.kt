@@ -4,7 +4,6 @@ import io.grpc.CallCredentials
 import io.grpc.Channel
 import io.grpc.demo.SINGLE_REQUEST_TIMEOUT_SECONDS
 import io.grpc.demo.STREAM_REQUEST_TIMEOUT_SECONDS
-import io.grpc.demo.grpc.exceptions.GrpcCancelledException
 import io.grpc.stub.AbstractStub
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
@@ -100,3 +99,5 @@ open class GrpcSource(protected val grpc: Grpc) {
         }
     }
 }
+
+class GrpcCancelledException : Exception("Call cancelled")

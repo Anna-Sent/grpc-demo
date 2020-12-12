@@ -10,11 +10,8 @@ import io.grpc.Metadata.Key
 import io.grpc.MethodDescriptor
 import io.grpc.Status
 import io.grpc.Status.Code.UNAUTHENTICATED
-import org.slf4j.Logger
 
-class GrpcAuthInterceptor(
-    private val logger: Logger
-) : ClientInterceptor {
+class GrpcAuthInterceptor : ClientInterceptor {
 
     override fun <Request : Any?, Response : Any?> interceptCall(
         method: MethodDescriptor<Request, Response>,
