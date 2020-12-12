@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("gRPCcc")
 
-class GreeterDataSource : GrpcSource(
+class CalculatorDataSource : GrpcSource(
     Grpc(
         logger,
         GrpcOptions(true, 0),
