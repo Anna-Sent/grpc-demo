@@ -15,7 +15,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Unary Call" />
+            android:text="Unary Call"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <include
             android:id="@+id/layout_calculate"
@@ -24,7 +26,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Server Streaming Call" />
+            android:layout_marginTop="32dp"
+            android:text="Server Streaming Call"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <include
             android:id="@+id/layout_fibonacci"

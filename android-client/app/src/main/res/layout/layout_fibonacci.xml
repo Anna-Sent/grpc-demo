@@ -3,14 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content">
 
-    <NumberPicker
-        android:id="@+id/number_picker"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <NumberPicker
+            android:id="@+id/number_picker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/request"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text=">" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"

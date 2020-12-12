@@ -14,11 +14,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.slf4j.LoggerFactory
 
 class MainActivity : Activity() {
-
-    private val logger = LoggerFactory.getLogger(toString())
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: FibonacciAdapter
@@ -32,9 +29,8 @@ class MainActivity : Activity() {
         binding = ActivityMainBinding.bind(findViewById(R.id.content))
         binding.layoutFibonacci.progressBar.isVisible = false
         binding.layoutFibonacci.numberPicker.setupLimits()
-        binding.layoutFibonacci.numberPicker.setOnValueChangedListener { _, _, newValue ->
-            // TODO Нужен debounce
-            subscribeToFibonacci(newValue)
+        binding.layoutFibonacci.request.setOnClickListener {
+            subscribeToFibonacci(binding.layoutFibonacci.numberPicker.value)
         }
         adapter = FibonacciAdapter()
         binding.layoutFibonacci.numbers.adapter = adapter
@@ -50,7 +46,7 @@ class MainActivity : Activity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.layoutCalculate.spinner.adapter = adapter
         }
-        binding.layoutCalculate.equals.setOnClickListener {
+        binding.layoutCalculate.request.setOnClickListener {
             val selectedItem = binding.layoutCalculate.spinner.selectedItem as String
             subscribeToCalculate(
                 binding.layoutCalculate.param1.value.toLong(),
@@ -60,6 +56,7 @@ class MainActivity : Activity() {
         }
     }
 
+    @Suppress("MagicNumber")
     private fun NumberPicker.setupLimits() {
         minValue = 0
         maxValue = 50
@@ -71,8 +68,8 @@ class MainActivity : Activity() {
     }
 
     private fun subscribeToFibonacci(number: Int) {
+        val fibonacci = mutableListOf<Long>()
         unsubscribeFromFibonacci()
-        val result = mutableListOf<Long>()
         fibonacciDisposable = Single.fromCallable {
             Number.newBuilder()
                 .setValue(number.toLong())
@@ -82,37 +79,34 @@ class MainActivity : Activity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                result.clear()
-                submitList(result)
+                fibonacci.clear()
+                submitList(fibonacci)
                 binding.layoutFibonacci.progressBar.isVisible = true
-                binding.layoutFibonacci.info.text = ""
             }
-            // TODO Нужен таймаут между попытками
+            // TODO Нужен таймаут между попытками и ограничение на количество попыток
             .retry { count, throwable ->
                 binding.layoutFibonacci.info.text = "$count: $throwable"
                 true
             }
             .subscribe(
                 {
-                    result += it.result.value
+                    fibonacci += it.result.value
                     binding.layoutFibonacci.progressBar.isVisible = false
-                    //binding.layoutFibonacci.result.text = "$number -> $result"
-                    submitList(result)
-                    // save last number
+                    binding.layoutFibonacci.info.text = ""
+                    submitList(fibonacci)
                 },
                 {
                     binding.layoutFibonacci.progressBar.isVisible = false
                     binding.layoutFibonacci.info.text = it.toString()
-                    // print error
                 },
                 {
                     binding.layoutFibonacci.progressBar.isVisible = false
                     binding.layoutFibonacci.info.text = "Completed, no data"
-                    // save last number
                 }
             )
     }
 
+    @Suppress("MagicNumber")
     private fun submitList(result: MutableList<Long>) {
         adapter.submitList(
             result.withIndex()
@@ -156,7 +150,6 @@ class MainActivity : Activity() {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 binding.layoutCalculate.progressBar.isVisible = true
-                binding.layoutFibonacci.info.text = ""
             }
             // TODO Нужен таймаут между попытками
             .retry { count, throwable ->
@@ -168,12 +161,10 @@ class MainActivity : Activity() {
                     binding.layoutCalculate.progressBar.isVisible = false
                     binding.layoutCalculate.info.text =
                         "$number1 $operation $number2 = ${it.result.value}"
-                    // save last number
                 },
                 {
                     binding.layoutCalculate.progressBar.isVisible = false
                     binding.layoutCalculate.info.text = it.toString()
-                    // print error
                 }
             )
     }

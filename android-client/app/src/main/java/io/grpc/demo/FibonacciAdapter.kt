@@ -33,6 +33,7 @@ class FibonacciViewHolder(itemView: View) : ViewHolder(itemView) {
     private val binding = ItemFibonacciBinding.bind(itemView)
 
     fun bind(item: Fibonacci) {
-        binding.title.text = "#${item.id}:\t\t\t\t${item.value}"
+        binding.title.text = "#${item.id}"
+        binding.content.text = item.value.toString()
     }
 }
