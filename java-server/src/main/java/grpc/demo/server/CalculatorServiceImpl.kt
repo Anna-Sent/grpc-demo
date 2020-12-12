@@ -7,41 +7,47 @@ import grpc.demo.Number
 import grpc.demo.Operation.ADD
 import grpc.demo.Operation.SUBTRACT
 import io.grpc.stub.StreamObserver
+import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 import java.util.logging.Logger
 
 class CalculatorServiceImpl(private val logger: Logger) : CalculatorServiceImplBase() {
 
+    companion object {
+
+        private val TIMEOUT_MS = TimeUnit.SECONDS.toMillis(1)
+    }
+
     override fun calculate(request: BinaryOperation, responseObserver: StreamObserver<CalculationResult>) {
         val result = with(request) {
             when (operation) {
-                ADD -> firstOperand + secondOperand
-                SUBTRACT -> firstOperand - secondOperand
+                ADD -> firstOperand.value + secondOperand.value
+                SUBTRACT -> firstOperand.value - secondOperand.value
                 else -> {
                     responseObserver.onError(UnsupportedOperationException("Unsupported $operation"))
                     return
                 }
             }
         }
-        responseObserver.onNext(CalculationResult.newBuilder().setResult(result).build())
+        responseObserver.onNext(result)
         responseObserver.onCompleted()
     }
 
     override fun fibonacci(request: Number, responseObserver: StreamObserver<CalculationResult>) {
         var count = request.value.toInt()
         if (count >= 1) {
-            Thread.sleep(5000)
-            responseObserver.onNext(CalculationResult.newBuilder().setResult(0f).build())
+            Thread.sleep(TIMEOUT_MS)
+            responseObserver.onNext(0)
         }
         if (count >= 2) {
-            Thread.sleep(5000)
-            responseObserver.onNext(CalculationResult.newBuilder().setResult(1f).build())
+            Thread.sleep(TIMEOUT_MS)
+            responseObserver.onNext(1)
         }
-        var state = 0 to 1
+        var state = 0L to 1L
         while (count >= 3) {
             state = state.second to state.first + state.second
-            Thread.sleep(5000)
-            responseObserver.onNext(CalculationResult.newBuilder().setResult(state.second.toFloat()).build())
+            Thread.sleep(TIMEOUT_MS)
+            responseObserver.onNext(state.second)
             --count
         }
         responseObserver.onCompleted()
@@ -50,7 +56,7 @@ class CalculatorServiceImpl(private val logger: Logger) : CalculatorServiceImplB
     override fun sumTotal(responseObserver: StreamObserver<CalculationResult>) =
         object : StreamObserver<Number> {
 
-            var sum = 0f
+            var sum = 0L
 
             override fun onNext(number: Number) {
                 sum += number.value
@@ -61,7 +67,7 @@ class CalculatorServiceImpl(private val logger: Logger) : CalculatorServiceImplB
             }
 
             override fun onCompleted() {
-                responseObserver.onNext(CalculationResult.newBuilder().setResult(sum).build())
+                responseObserver.onNext(sum)
                 responseObserver.onCompleted()
             }
         }
@@ -69,11 +75,11 @@ class CalculatorServiceImpl(private val logger: Logger) : CalculatorServiceImplB
     override fun sumCurrent(responseObserver: StreamObserver<CalculationResult>) =
         object : StreamObserver<Number> {
 
-            var sum = 0f
+            var sum = 0L
 
             override fun onNext(number: Number) {
                 sum += number.value
-                responseObserver.onNext(CalculationResult.newBuilder().setResult(sum).build())
+                responseObserver.onNext(sum)
             }
 
             override fun onError(t: Throwable) {
@@ -84,4 +90,15 @@ class CalculatorServiceImpl(private val logger: Logger) : CalculatorServiceImplB
                 responseObserver.onCompleted()
             }
         }
+
+    private fun StreamObserver<CalculationResult>.onNext(value: Long) =
+        onNext(
+            CalculationResult.newBuilder()
+                .setResult(
+                    Number.newBuilder()
+                        .setValue(value)
+                        .build()
+                )
+                .build()
+        )
 }

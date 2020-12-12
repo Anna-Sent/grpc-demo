@@ -9,23 +9,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="16dp"
         tools:context=".MainActivity">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unary Call" />
 
         <include
             android:id="@+id/layout_calculate"
             layout="@layout/layout_calculate" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server Streaming Call" />
+
         <include
             android:id="@+id/layout_fibonacci"
             layout="@layout/layout_fibonacci" />
-
-        <include
-            android:id="@+id/layout_sum_current"
-            layout="@layout/layout_sum_current" />
-
-        <include
-            android:id="@+id/layout_sum_total"
-            layout="@layout/layout_sum_total" />
 
     </LinearLayout>
 

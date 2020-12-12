@@ -16,15 +16,15 @@ enum Operation {
 }
 
 message BinaryOperation {
-    float first_operand = 1;
-    float second_operand = 2;
+    Number first_operand = 1;
+    Number second_operand = 2;
     Operation operation = 3;
 }
 
 message CalculationResult {
-    float result = 1;
+    Number result = 1;
 }
 
 message Number {
-    float value = 1;
+    int64 value = 1;
 }
