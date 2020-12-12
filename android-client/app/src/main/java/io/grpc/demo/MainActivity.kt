@@ -113,7 +113,7 @@ class MainActivity : Activity() {
                     operation
                 )
             }
-            result.content.isVisible = false
+            result.root.isVisible = false
         }
     }
 
@@ -184,7 +184,7 @@ class MainActivity : Activity() {
             progressBar.isVisible = true
             info.text = "$first $operation $second ="
             result.content.text = ""
-            result.content.isVisible = false
+            result.root.isVisible = false
         }
     }
 
@@ -203,7 +203,7 @@ class MainActivity : Activity() {
             progressBar.isVisible = false
             info.text = "$first $operation $second ="
             this.result.content.text = result.result.value.toString()
-            this.result.content.isVisible = true
+            this.result.root.isVisible = true
         }
     }
 
