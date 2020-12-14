@@ -4,7 +4,7 @@
     <style name="AppBaseTheme" parent="Theme.MaterialComponents.Light.DarkActionBar" />
 
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:fontFamily">@font/montserrat_light</item>
+        <item name="android:fontFamily">@font/montserrat_extra_bold</item>
     </style>
 
 </resources>

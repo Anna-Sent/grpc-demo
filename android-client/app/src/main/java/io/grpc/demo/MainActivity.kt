@@ -1,6 +1,5 @@
 package io.grpc.demo
 
-import android.R.layout
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.NumberPicker
@@ -11,7 +10,6 @@ import grpc.demo.CalculationResult
 import grpc.demo.Number
 import grpc.demo.Operation.ADD
 import grpc.demo.Operation.SUBTRACT
-import io.grpc.demo.R.array
 import io.grpc.demo.databinding.ActivityMainBinding
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -99,10 +97,10 @@ class MainActivity : AppCompatActivity() {
             param2.setupLimits()
             ArrayAdapter.createFromResource(
                 this@MainActivity,
-                array.binary_operation,
-                layout.simple_spinner_item
+                R.array.binary_operation,
+                R.layout.simple_spinner_item
             ).also { adapter ->
-                adapter.setDropDownViewResource(layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
                 operation.adapter = adapter
             }
             request.setOnClickListener {
@@ -217,7 +215,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleFibonacciStart(fibonacciCount: Int) {
         with(binding.layoutFibonacci) {
             progressBar.isVisible = true
-            info.text = "$fibonacciCount ->"
+            info.text = "$fibonacciCount →"
             fibonacci.clear()
             adapter.submitList(fibonacci)
         }
@@ -231,7 +229,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleFibonacciSuccess(fibonacciCount: Int, result: CalculationResult) {
         with(binding.layoutFibonacci) {
             progressBar.isVisible = false
-            info.text = "$fibonacciCount ->"
+            info.text = "$fibonacciCount →"
             fibonacci += result.result.value
             adapter.submitList(fibonacci)
         }

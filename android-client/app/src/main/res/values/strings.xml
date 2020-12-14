@@ -5,7 +5,7 @@
 
     <string-array name="binary_operation">
         <item>+</item>
-        <item>-</item>
+        <item>–</item>
     </string-array>
 
 </resources>
