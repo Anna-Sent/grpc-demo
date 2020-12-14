@@ -1,10 +1,10 @@
 package io.grpc.demo
 
 import android.R.layout
-import android.app.Activity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.NumberPicker
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import grpc.demo.BinaryOperation
 import grpc.demo.CalculationResult
@@ -19,7 +19,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 @Suppress("TooManyFunctions")
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
     companion object {
 
