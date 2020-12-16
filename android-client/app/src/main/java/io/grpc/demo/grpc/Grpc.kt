@@ -33,8 +33,36 @@ class Grpc constructor(
             .keepAliveTime(KEEPALIVE_TIME_SECONDS, SECONDS)
             .keepAliveTimeout(KEEPALIVE_TIMEOUT_SECONDS, SECONDS)
             .keepAliveWithoutCalls(true)
+            .enableRetry()
+            .defaultServiceConfig(serviceConfig())
             .build()
     }
+
+    private fun serviceConfig(): Map<String, Any> =
+        mutableMapOf<String, Any>(
+            "methodConfig" to listOf(methodConfig())
+        )
+
+    private fun methodConfig(): MutableMap<String, Any> =
+        mutableMapOf(
+            "name" to listOf(serviceNames()),
+            "retryPolicy" to retryPolicy()
+        )
+
+    private fun serviceNames(): Map<String, Any> =
+        mutableMapOf<String, Any>(
+            "service" to "CalculatorService"
+        )
+
+    @Suppress("MagicNumber")
+    private fun retryPolicy(): MutableMap<String, Any> =
+        mutableMapOf(
+            "maxAttempts" to 2.0,
+            "initialBackoff" to "10s",
+            "maxBackoff" to "30s",
+            "backoffMultiplier" to 2.0,
+            "retryableStatusCodes" to listOf("UNAVAILABLE")
+        )
 }
 
 data class GrpcOptions(
