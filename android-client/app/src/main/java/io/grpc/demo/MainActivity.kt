@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         private fun String.toOperation() =
             when (this) {
                 "+" -> ADD
-                "-" -> SUBTRACT
+                "–" -> SUBTRACT
                 else -> throw UnsupportedOperationException("$this not supported")
             }
     }
