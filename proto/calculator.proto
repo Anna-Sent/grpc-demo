@@ -10,9 +10,8 @@ service CalculatorService {
     rpc SumCurrent (stream Number) returns (stream CalculationResult);
 }
 
-enum Operation {
-    ADD = 0;
-    SUBTRACT = 1;
+message Number {
+    int64 value = 1;
 }
 
 message BinaryOperation {
@@ -21,10 +20,11 @@ message BinaryOperation {
     Operation operation = 3;
 }
 
-message CalculationResult {
-    Number result = 1;
+enum Operation {
+    ADD = 0;
+    SUBTRACT = 1;
 }
 
-message Number {
-    int64 value = 1;
+message CalculationResult {
+    Number result = 1;
 }
